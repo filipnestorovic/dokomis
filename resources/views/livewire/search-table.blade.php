@@ -1,17 +1,4 @@
 <div>
-    <style>
-        #searchFormDiv {
-            display: flex;
-            flex-direction: row;
-        }
-
-        /* Responsive layout - makes a one column layout instead of a two-column layout */
-        @media (max-width: 800px) {
-            #searchFormDiv {
-                flex-direction: column;
-            }
-        }
-    </style>
     <div class="col-md-12">
         <div class="card mb-3 mt-0 wow fadeIn">
          <span class="text-center m-4">
@@ -66,7 +53,7 @@
     </div>
     @if($companies)
         <div class="col-md-12">
-            <div class="card mt-0 wow fadeIn">
+            <div class="card mt-0 wow fadeIn table-responsive">
                 @if($companies->isEmpty())
                     <h4 class="m-4 text-center">Nema rezultata za zadate kriterijume pretrage.</h4>
                 @else
@@ -79,11 +66,12 @@
                             <th scope="col">Važi od</th>
                             <th scope="col">Važi do</th>
                             <th scope="col">Status</th>
+                            <th scope="col">Više</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($companies as $singleCompanyCertificate)
-                            <tr>
+                            <tr wire:click="showModal({{ $singleCompanyCertificate->id }})" class="clickableTr">
                                 <td>{{$singleCompanyCertificate->certificate_number}}</td>
                                 <td>{{$singleCompanyCertificate->company->name}}</td>
                                 <td>{{$singleCompanyCertificate->certificate->name}}</td>
@@ -105,6 +93,9 @@
                                         @break
                                     @endswitch
                                 </td>
+                                <td>
+                                    <i class="fas fa-search fa-lg mt-2"></i>
+                                </td>
                             </tr>
                         @endforeach
                         </tbody>
@@ -112,5 +103,129 @@
                 @endif
             </div>
         </div>
+        @if($selectedCertificate)
+        <div wire:ignore.self wire:prevent class="modal fade modal-dialog-centered" tabindex="-1">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            {{$selectedCertificate->certificate_number}}
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">Naziv</h5>
+                                                <span>{{$selectedCertificate->company->name}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">PIB</h5>
+                                                <span>{{$selectedCertificate->company->vat}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">Adresa</h5>
+                                                <span>{{$selectedCertificate->company->address}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">Grad</h5>
+                                                <span>{{$selectedCertificate->company->city}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">Država</h5>
+                                                <span>{{$selectedCertificate->company->country}}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                                <td>
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">Sertifikat</h5>
+                                                <span>{{$selectedCertificate->certificate->name}}</span>
+                                                <br><br>
+                                                <span>{{$selectedCertificate->certificate->description}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">Oblast primene</h5>
+                                                <span>{{$selectedCertificate->application_area}}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h5 class="dokomis-blue">Status sertifikata</h5>
+                                                <span>
+                                                    @switch($selectedCertificate->status)
+                                                        @case(1)
+                                                            <span class="badge badge-pill badge-success">Validan</span>
+                                                            @break
+                                                        @case(2)
+                                                            <span class="badge badge-pill badge-danger">Istekao</span>
+                                                            @break
+                                                        @case(3)
+                                                            <span class="badge badge-pill badge-warning">Suspendovan</span>
+                                                            @break
+                                                        @case(4)
+                                                            <span class="badge badge-pill badge-danger">Povučen</span>
+                                                            @break
+                                                    @endswitch
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @endif
     @endif
+    @push('styles')
+        <style>
+            #searchFormDiv {
+                display: flex;
+                flex-direction: row;
+            }
+            @media (max-width: 800px) {
+                #searchFormDiv {
+                    flex-direction: column;
+                }
+            }
+            .clickableTr {
+                cursor: pointer;
+            }
+            .dokomis-blue {
+                color: #5cafc2;
+            }
+            .table td, .table th {
+                border-top: none !important;
+            }
+        </style>
+    @endpush
+    @push('scripts')
+        <script>
+            window.addEventListener('show-modal', event => {
+                $('.modal').modal('show');
+            });
+        </script>
+    @endpush
 </div>

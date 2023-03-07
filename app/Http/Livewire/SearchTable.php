@@ -13,6 +13,8 @@ class SearchTable extends Component
     public $certificateNumber;
     public $companies;
 
+    public $selectedCertificate;
+
     protected $listeners = ['showResultTable' => '$refresh'];
 
     protected $rules = [
@@ -62,5 +64,11 @@ class SearchTable extends Component
                     });
                 })
             ->get();
+    }
+
+    public function showModal($id)
+    {
+        $this->selectedCertificate = CompanyCertificate::with('company','certificate')->find($id);
+        $this->dispatchBrowserEvent('show-modal');
     }
 }
