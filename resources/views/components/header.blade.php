@@ -25,15 +25,15 @@
     <header>
         <nav class="navbar fixed-top navbar-light white pt-2 pb-2 pl-0">
             <div class="container-fluid">
-                <img src="{{asset('images/dokomis_logo.png')}}" alt="dokomis_logo"/>
-{{--                <div class="float-right">--}}
+                <a href="https://dokomis.rs" target="_blank"><img src="{{asset('images/dokomis_logo.png')}}" alt="dokomis_logo"/></a>
+                <div class="float-right">
 {{--                    <ul class="navbar-nav nav-flex-icons">--}}
 {{--                        <li class="nav-item">--}}
 {{--                            <div class="text-center">--}}
 {{--                            </div>--}}
 {{--                        </li>--}}
 {{--                    </ul>--}}
-{{--                </div>--}}
+                </div>
             </div>
         </nav>
     </header>

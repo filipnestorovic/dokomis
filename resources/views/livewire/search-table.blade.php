@@ -189,6 +189,9 @@
                                                 </span>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td><a href="https://dokomis.rs/complaints/" target="_blank"><span class="dokomis-blue">Imate žalbu ili prigovor? Molimo popunite formu na našem sajtu.</span></a></td>
+                                        </tr>
                                     </table>
                                 </td>
                             </tr>
@@ -218,6 +221,9 @@
             }
             .table td, .table th {
                 border-top: none !important;
+            }
+            a {
+                text-decoration: none;
             }
         </style>
     @endpush
