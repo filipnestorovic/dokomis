@@ -54,8 +54,8 @@ class CompanyCertificateResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('certificate_number')->sortable()->searchable(),
-                Tables\Columns\TextColumn::make('application_area')->searchable(),
-                Tables\Columns\TextColumn::make('company.name'),
+                Tables\Columns\TextColumn::make('application_area'),
+                Tables\Columns\TextColumn::make('company.name')->searchable(),
                 Tables\Columns\TextColumn::make('certificate.name'),
                 Tables\Columns\TextColumn::make('valid_from')->sortable(),
                 Tables\Columns\TextColumn::make('valid_until')->sortable(),
