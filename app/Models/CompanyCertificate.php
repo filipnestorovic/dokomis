@@ -25,7 +25,7 @@ class CompanyCertificate extends Model
 
     public function getStatusAttribute()
     {
-        // 1 - validan, 2 - istekao, 3 - suspendovan, 4 - povucen
+        // 1 - validan, 2 - istekao, 3 - suspendovan, 4 - povucen, 5 - neaktivan
         if($this->is_suspended) {
             return 3;
         } elseif($this->is_withdrawn) {
@@ -35,5 +35,22 @@ class CompanyCertificate extends Model
         } else {
             return 2;
         }
+    }
+
+    public function scopeNotInFuture($query)
+    {
+        $query->where('valid_from','<=',Carbon::now());
+    }
+
+    public function getValidFromFormattedAttribute()
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $this->valid_from);
+        return $date->format('d/m/Y');
+    }
+
+    public function getValidUntilFormattedAttribute()
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $this->valid_until);
+        return $date->format('d/m/Y');
     }
 }

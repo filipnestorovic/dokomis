@@ -41,6 +41,7 @@ class CompanyCertificateResource extends Resource
                 Forms\Components\TextInput::make('application_area')->required(),
                 DatePicker::make('valid_from')->required(),
                 DatePicker::make('valid_until')->required(),
+                Forms\Components\TextInput::make('note'),
                 Forms\Components\Grid::make(4)
                     ->schema([
                         Forms\Components\Toggle::make('is_suspended')->helperText('Ukoliko je sertifikat trenutno suspendovan.'),

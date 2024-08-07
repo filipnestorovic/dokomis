@@ -15,16 +15,16 @@ class SearchTable extends Component
 
     public $selectedCertificate;
 
-    protected $listeners = ['showResultTable' => '$refresh'];
+    protected $listeners = ['showResultTable','resultTable' => '$refresh'];
 
     protected $rules = [
-        'companyName' => 'nullable|min:3',
+        'companyName' => 'nullable|min:5',
         'companyVAT' => 'nullable|numeric|digits:9',
         'certificateNumber' => 'nullable|regex:/^\d{2}-\d{4}-\d{1}\/\d{2}-\d{4,5}$/',
     ];
 
     protected $messages = [
-        'companyName' => 'Naziv firme mora imati bar 3 karaktera',
+        'companyName' => 'Naziv firme mora imati bar 5 karaktera',
         'companyVAT' => 'PIB mora imati 9 cifara',
         'certificateNumber' => 'Broj sertifikata mora biti u formatu: 00-0000-0/00-00000',
     ];
@@ -35,35 +35,40 @@ class SearchTable extends Component
         return view('livewire.search-table');
     }
 
-    public function updated($name, $value)
+    public function updated()
+    {
+        $this->validate();
+    }
+
+    public function showResultTable()
     {
         $this->validate();
 
         if($this->companyName||$this->companyVAT||$this->certificateNumber) {
-            $this->showResultTable();
+            $this->resultTable();
         } else {
             $this->companies = [];
         }
     }
 
-    public function showResultTable()
+    public function resultTable()
     {
         $this->companies =
             CompanyCertificate::with('company','certificate')
                 ->when($this->certificateNumber, function ($q) {
-                    $q->where('certificate_number', 'LIKE', '%'.$this->certificateNumber.'%');
+                    $q->where('certificate_number', 'LIKE', $this->certificateNumber);
                 })
                 ->when($this->companyName, function ($q) {
                     return $q->whereHas('company', function ($query) {
-                        $query->where('name', 'LIKE', '%'.$this->companyName.'%');
+                        $query->where('name', 'LIKE', $this->companyName.'%');
                     });
                 })
                 ->when($this->companyVAT, function ($q) {
                     return $q->whereHas('company', function ($query) {
-                        $query->where('vat', 'LIKE', '%'.$this->companyVAT.'%');
+                        $query->where('vat', 'LIKE', $this->companyVAT);
                     });
                 })
-            ->get();
+                ->get();
     }
 
     public function showModal($id)
