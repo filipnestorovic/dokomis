@@ -113,7 +113,7 @@
                             <h5 class="modal-title">
                                 {{$selectedCertificate->certificate_number}}
                             </h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -241,6 +241,10 @@
         <script>
             window.addEventListener('show-modal', event => {
                 $('.modal').modal('show');
+            });
+
+            $(document).on('click', '.modal .close', function () {
+                $(this).closest('.modal').modal('hide');
             });
         </script>
     @endpush
