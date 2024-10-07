@@ -43,7 +43,7 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-    public function canAccessPanel(Panel $panel): bool
+    public function canAccessFilament(): bool
     {
         return str_ends_with($this->email, '@dokomis.rs');
     }
